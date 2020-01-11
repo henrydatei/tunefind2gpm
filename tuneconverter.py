@@ -34,6 +34,8 @@ def add_to_playlist(title, authors):
 
 	if (songid != ""):
 		songs.append(songid)
+	else:
+		print("    Could not find a matching song.")
 
 """ Parse through all the links until you get to a song """
 def search_recursive(elem, i=1, url=""):
@@ -106,23 +108,23 @@ def search_recursive(elem, i=1, url=""):
 
 def main():
 
-	""" Test Cases """
-	link = "https://www.tunefind.com/game/john-wick-hex-2019"
-	playlist_title = "John Wick"
-	description = ""
+	# """ Test Cases """
+	# link = "https://www.tunefind.com/game/john-wick-hex-2019"
+	# playlist_title = "John Wick"
+	# description = ""
 
-	link = "https://www.tunefind.com/movie/catch-me-if-you-can-2002"
-	playlist_title = "Catch Me If You Can (2002)"
-	description = ""
+	# link = "https://www.tunefind.com/movie/catch-me-if-you-can-2002"
+	# playlist_title = "Catch Me If You Can (2002)"
+	# description = ""
 
-	link = "https://www.tunefind.com/show/mr-robot/"
-	playlist_title = "Mr. Robot"
-	description = ""
+	# link = "https://www.tunefind.com/show/mr-robot/"
+	# playlist_title = "Mr. Robot"
+	# description = ""
 
 
-	#link = input("Input the tunefind.com url: ")
-	#playlist_title = input("What do you want to call your Google Play Music Playlist?: ")
-	#description = input("[Optional] Add a description for your playlist (Press enter if you want to leave this blank): ")
+	link = input("Input the tunefind.com url: ")
+	playlist_title = input("What do you want to call your Google Play Music Playlist?: ")
+	description = input("[Optional] Add a description for your playlist (Press enter if you want to leave this blank): ")
 
 	# Remove whitespace and new lines
 	link = link.translate({ord(c): None for c in string.whitespace})
