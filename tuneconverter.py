@@ -1,10 +1,13 @@
-from bs4 import BeautifulSoup
-import string
-import requests
 from gmusicapi import Mobileclient
-import sys
-import os.path
+from bs4 import BeautifulSoup
 from os import path
+import html2text
+import requests
+import os.path
+import string
+import sys
+
+
 
 
 songs = []
@@ -14,7 +17,17 @@ api = Mobileclient()
 def add_to_playlist(title, authors):
 	#print(title)
 	#print("     " + authors[0])
+
 	search_term = title + " " + authors[0]
+
+	# Convert HTML to text
+	h = html2text.HTML2Text()
+	h.ignore_links = True
+	search_term = h.handle(search_term)
+
+	# Remove trailing new lines and whitespace
+	search_term = search_term.rstrip("\n\r").strip()
+
 	print("Search Term: " + search_term)
 	search = api.search(search_term) # Looks for the matching song in the GPM store
 
@@ -125,8 +138,8 @@ def main():
 	# description = ""
 
 	link = ""
-	playlist_title = ""
-	description = ""
+	playlist_title = "Sample Title"
+	description = "Sample description"
 
 	if (len(sys.argv) > 1):
 		link = sys.argv[1]
