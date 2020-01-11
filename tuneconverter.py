@@ -11,7 +11,7 @@ def add_to_playlist(title, author):
 	pass
 
 """ Parse through all the links until you get to a song """
-def search_recursive(elem, i=1):
+def search_recursive(elem, i=1, url=""):
 
 	# If this is the first time the function is called
 	# Decide what type of page it is (e.g. movie, song, show, game, etc)
@@ -43,14 +43,27 @@ def search_recursive(elem, i=1):
 			#search_recursive("game", 1)
 
 	elif elem == "show":
-		# Magic using Beautiful Soup
-		soup = BeautifulSoup(requests.get((link + "season-" + str(i))).text, 'html.parser')
+		# Do some magic using Beautiful Soup
+		# Obtains html page from url
+		html = BeautifulSoup(requests.get((link + "season-" + str(i))).text, 'html.parser')
 		
-		print(soup.find_all('a'))
-			# print("Page not found")
-			# return
+		# This means that there are no more season in the show
+		if "Page not found" in html.find_all('h2')[0]:
+			print("Page not found")
+			return
 
-		#search_recursive("show", i + 1)
+		soup = html.find_all('a')
+		# Searches for episodes for each season of the show
+		for spoon in soup:
+			if "#song" in spoon['href']:
+				search_recursive("song", url=spoon['href'])
+
+		search_recursive("show", i + 1)
+
+	elif elem == "song":
+		print(url)
+		
+		
 
 
 def main():
