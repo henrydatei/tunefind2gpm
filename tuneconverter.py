@@ -1,9 +1,11 @@
 from bs4 import BeautifulSoup
 import string
 import requests
+from gmusicapi import Mobileclient
 
 
 songs = []
+api = Mobileclient()
 
 """ Adds the song to the playlist """
 def add_to_playlist(title, authors):
@@ -74,19 +76,27 @@ def search_recursive(elem, i=1, url=""):
 
 
 def main():
-	
 
 	link = "https://www.tunefind.com/show/mr-robot"
+	playlist_title = "Mr. Robot"
+	description = "All the songs from Mr. Robot"
+	#link = input("Input the tunefind.com url: ")
+	#playlist_title = input("What do you want to call your Google Play Music Playlist?: ")
+	#description = input("[Optional] Add a description for your playlist (Press enter if you want to leave this blank): ")
 
 	# Remove whitespace and new lines
 	link = link.translate({ord(c): None for c in string.whitespace})
-
 	# If the url doesn't have trailing / at the end, add it 
 	if link[-1] != '/':
 		link += '/'
 
-	print("Loading tunefind.com page...")
+	""" Do GPM API Stuff"""
+	#api.perform_oauth()
+	# after running api.perform_oauth() once:
+	api.oauth_login(api.FROM_MAC_ADDRESS)
+	playlist = api.create_playlist(playlist_title, description)
 
+	print("Loading tunefind.com page...")
 	search_recursive(None, url=link)
 
 
