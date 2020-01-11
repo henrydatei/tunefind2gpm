@@ -141,7 +141,7 @@ def main():
 		link += '/'
 
 	""" Do GPM API Stuff"""
-	 	#api.perform_oauth()
+	api.perform_oauth()
 	# after running api.perform_oauth() once:
 	api.oauth_login(api.FROM_MAC_ADDRESS)
 	playlist = api.create_playlist(playlist_title, description)
