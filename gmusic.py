@@ -7,6 +7,7 @@ api = Mobileclient()
 api.oauth_login(api.FROM_MAC_ADDRESS)
 
 playlist = api.create_playlist("Google code in playlist", "Testing")
-search = api.search("Insane In the Brain CYPRESS HILL")
-songid = (search['station_hits'][0]['station']['seed']['trackId'])
+search = api.search("mr. roboto styx")
+songid = search['song_hits'][0]['track']['storeId']
+print(songid)
 api.add_songs_to_playlist(playlist, songid)
