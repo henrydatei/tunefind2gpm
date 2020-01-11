@@ -143,7 +143,7 @@ def main():
 		link += '/'
 
 	""" Do GPM API Stuff"""
-	if !(path.exists(api.OAUTH_FILEPATH)):
+	if not (path.exists(api.OAUTH_FILEPATH)):
 		api.perform_oauth()
 
 	# after running api.perform_oauth() once:
