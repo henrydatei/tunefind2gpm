@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import string
 import requests
 from gmusicapi import Mobileclient
+import sys
 
 
 songs = []
@@ -35,7 +36,7 @@ def add_to_playlist(title, authors):
 	if (songid != ""):
 		songs.append(songid)
 	else:
-		print("    Could not find a matching song.")
+		print("    Could not find a matching song.\n")
 
 """ Parse through all the links until you get to a song """
 def search_recursive(elem, i=1, url=""):
@@ -121,10 +122,17 @@ def main():
 	# playlist_title = "Mr. Robot"
 	# description = ""
 
+	link = ""
+	playlist_title = ""
+	description = ""
 
-	link = input("Input the tunefind.com url: ")
-	playlist_title = input("What do you want to call your Google Play Music Playlist?: ")
-	description = input("[Optional] Add a description for your playlist (Press enter if you want to leave this blank): ")
+	if (len(sys.argv) > 1):
+		link = sys.argv[1]
+
+	else:
+		link = input("Input the tunefind.com url: ")
+		playlist_title = input("What do you want to call your Google Play Music Playlist?: ")
+		description = input("[Optional] Add a description for your playlist (Press enter if you want to leave this blank): ")
 
 	# Remove whitespace and new lines
 	link = link.translate({ord(c): None for c in string.whitespace})

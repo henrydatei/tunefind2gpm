@@ -9,4 +9,13 @@ pip install gmusicapi
 ```
 
 ## Usage
-`python tuneconverter.py`
+`python tuneconverter.py` or using `python tuneconverter.py <url>`
+
+## Examples
+```
+python tuneconverter https://www.tunefind.com/game/john-wick-hex-2019
+python tuneconverter https://www.tunefind.com/show/mr-robot/
+python tuneconverter https://www.tunefind.com/movie/catch-me-if-you-can-2002
+
+```
+
