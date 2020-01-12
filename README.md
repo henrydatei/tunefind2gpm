@@ -3,10 +3,7 @@ Takes a tunefind.com url and creates a Google Play Music (GPM) playlist of all t
 
 ## Installation
 ```
-pip install bs4
-pip install requests
-pip install gmusicapi
-pip install html2text
+pip install -r requirements.txt 
 ```
 
 ## Usage
