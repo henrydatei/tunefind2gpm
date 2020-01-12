@@ -157,13 +157,18 @@ def main():
 	# playlist_title = "Mr. Robot"
 	# description = ""
 
+	# link = "https://www.tunefind.com/show/derry-girls/season-1/55769#songs"
+	# playlist_title = "Derry Girls Season 1 Episode 1"
+	# description = ""
+
 	link = ""
 	playlist_title = ""
 	description = ""
 
 	if (len(sys.argv) > 1):
 		link = sys.argv[1]
-
+		if (len(sys.argv) > 2):
+			playlist_title = sys.argv[2]
 	else:
 		link = input("Input the tunefind.com url: ")
 		playlist_title = input("[Optional] What do you want to call your Google Play Music Playlist?: ")
