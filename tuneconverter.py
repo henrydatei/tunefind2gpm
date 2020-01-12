@@ -20,13 +20,21 @@ def add_to_playlist(title, authors):
 
 	search_term = title + " " + authors[0]
 
-	# Convert HTML to text
+	# Convert HTML to text and remove trailing new lines and whitespace
 	h = html2text.HTML2Text()
 	h.ignore_links = True
-	search_term = h.handle(search_term)
+	title = h.handle(title).rstrip("\n\r").strip()
 
-	# Remove trailing new lines and whitespace
-	search_term = search_term.rstrip("\n\r").strip()
+	# Convert HTML to text and remove trailing new lines and whitespace
+	h = html2text.HTML2Text()
+	h.ignore_links = True
+	author = h.handle(authors[0]).rstrip("\n\r").strip()
+
+	# () and - mess up search
+	title = title.split("(")[0]
+	title = title.split("-")[0]
+
+	search_term = title + " " + author
 
 	print("Search Term: " + search_term)
 	search = api.search(search_term) # Looks for the matching song in the GPM store
@@ -75,12 +83,23 @@ def search_recursive(elem, i=1, url=""):
 		elif split[-3] == "game":
 			print("game")
 			search_recursive("game", url=url)
+		# Checks the url to see if this web page is for an episode
+		elif "season" in split[-3]:
+			print("Episode")
+			search_recursive("song", url=url)
+		# Checks the url to see if this web page is for a season
+		elif "season" in split[-2]:
+			print("Season")
+			search_recursive("season", url=url)
 
-	elif elem == "show":
+	elif elem == "show" or elem == "season":
 		# Do some magic using Beautiful Soup
 		# Obtains html page from url
-		html = BeautifulSoup(requests.get((url + "season-" + str(i))).text, 'html.parser')
-		
+		if (elem == "show"):
+			html = BeautifulSoup(requests.get((url + "season-" + str(i))).text, 'html.parser')
+		else:
+			html = BeautifulSoup(requests.get(url).text, 'html.parser')
+
 		# This means that there are no more season in the show
 		if "Page not found" in html.find_all('h2')[0]:
 			#print("Page not found")
@@ -92,7 +111,8 @@ def search_recursive(elem, i=1, url=""):
 			if "#song" in spoon['href']:
 				search_recursive("song", url="https://www.tunefind.com"+ spoon['href'])
 
-		search_recursive("show", i + 1, url)
+		if (elem != "season"):
+			search_recursive("show", i + 1, url)
 
 	elif elem == "song" or elem == "movie" or elem=="game":
 		#print(url)
@@ -138,15 +158,15 @@ def main():
 	# description = ""
 
 	link = ""
-	playlist_title = "Sample Title"
-	description = "Sample description"
+	playlist_title = ""
+	description = ""
 
 	if (len(sys.argv) > 1):
 		link = sys.argv[1]
 
 	else:
 		link = input("Input the tunefind.com url: ")
-		playlist_title = input("What do you want to call your Google Play Music Playlist?: ")
+		playlist_title = input("[Optional] What do you want to call your Google Play Music Playlist?: ")
 		description = input("[Optional] Add a description for your playlist (Press enter if you want to leave this blank): ")
 
 	# Remove whitespace and new lines
@@ -154,6 +174,12 @@ def main():
 	# If the url doesn't have trailing / at the end, add it 
 	if link[-1] != '/':
 		link += '/'
+
+	# If the user did not specify a playlist title, get it from the link
+	if playlist_title == "":
+		html = BeautifulSoup(requests.get(link).text, 'html.parser')
+		title = html.find_all("title")[0].text.split("|")[0]
+		#print(title)
 
 	""" Do GPM API Stuff"""
 	if not (path.exists(api.OAUTH_FILEPATH)):
