@@ -1,4 +1,3 @@
-from gmusicapi import Mobileclient
 from bs4 import BeautifulSoup
 from os import path
 import html2text
@@ -7,11 +6,7 @@ import os.path
 import string
 import sys
 
-
-
-
 songs = []
-api = Mobileclient()
 
 """ Adds the song to the playlist """
 def add_to_playlist(title, authors):
@@ -36,30 +31,9 @@ def add_to_playlist(title, authors):
 
 	search_term = title + " " + author
 
-	print("Search Term: " + search_term)
-	search = api.search(search_term) # Looks for the matching song in the GPM store
-
-	songid = ""
-
-	try:
-		songid = search['song_hits'][0]['track']['storeId']
-		print("    Song ID: " + songid + "\n")
-	except:
-		try:
-			songid = search['song_hits'][0]['track']['albumId']
-			print("    Album ID: " + songid + "\n")
-		except:
-			try:
-				songid = search['station_hits'][0]['station']['seed']['trackId']
-				print("    Track ID: " + songid + "\n")
-			except:
-				pass
-
-
-	if (songid != ""):
-		songs.append(songid)
-	else:
-		print("    Could not find a matching song.\n")
+	#print("Search Term: " + search_term)
+	print(author + " - " + title)
+	#search = api.search(search_term) # Looks for the matching song in the GPM store
 
 """ Parse through all the links until you get to a song """
 def search_recursive(elem, i=1, url=""):
@@ -162,42 +136,20 @@ def main():
 	# description = ""
 
 	link = ""
-	playlist_title = ""
-	description = ""
 
 	if (len(sys.argv) > 1):
 		link = sys.argv[1]
-		if (len(sys.argv) > 2):
-			playlist_title = sys.argv[2]
 	else:
 		link = input("Input the tunefind.com url: ")
-		playlist_title = input("[Optional] What do you want to call your Google Play Music Playlist?: ")
-		description = input("[Optional] Add a description for your playlist (Press enter if you want to leave this blank): ")
 
 	# Remove whitespace and new lines
 	link = link.translate({ord(c): None for c in string.whitespace})
-	# If the url doesn't have trailing / at the end, add it 
+	# If the url doesn't have trailing / at the end, add it
 	if link[-1] != '/':
 		link += '/'
 
-	# If the user did not specify a playlist title, get it from the link
-	if playlist_title == "":
-		html = BeautifulSoup(requests.get(link).text, 'html.parser')
-		title = html.find_all("title")[0].text.split("|")[0]
-		#print(title)
-
-	""" Do GPM API Stuff"""
-	if not (path.exists(api.OAUTH_FILEPATH)):
-		api.perform_oauth()
-
-	# after running api.perform_oauth() once:
-	api.oauth_login(api.FROM_MAC_ADDRESS)
-	playlist = api.create_playlist(playlist_title, description)
-
 	print("Loading tunefind.com page...")
 	search_recursive(None, url=link)
-
-	api.add_songs_to_playlist(playlist, songs)
 
 if __name__ == "__main__":
     main()

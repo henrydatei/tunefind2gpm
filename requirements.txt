@@ -4,9 +4,6 @@
 # tuneconverter.py: 2
 bs4 == 0.0.1
 
-# tuneconverter.py: 1
-gmusicapi == 12.1.1
-
 # tuneconverter.py: 4
 html2text == 2019.9.26
 
